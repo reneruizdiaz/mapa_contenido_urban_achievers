@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa Operativo de Contenido · Urban Achievers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14110d;
+    --panel:#1c1813;
+    --panel2:#232019;
+    --ink:#ece4d6;
+    --muted:#a39a8b;
+    --faint:#6f685c;
+    --ox:#c74b4f;
+    --ox-deep:#6e1d21;
+    --brass:#c8a95e;
+    --brass-line:rgba(200,169,94,.20);
+    --brass-faint:rgba(200,169,94,.10);
+    --display:'Fraunces',Georgia,serif;
+    --body:'Hanken Grotesk',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.6;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(900px 500px at 85% -8%, rgba(199,75,79,.10), transparent 60%),
+      radial-gradient(700px 600px at -5% 12%, rgba(200,169,94,.06), transparent 55%);
+    background-attachment:fixed;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+  /* eyebrow / labels */
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--brass);
+  }
+  .tag{
+    font-family:var(--mono);
+    font-size:.62rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    padding:4px 9px;
+    border:1px solid var(--brass-line);
+    border-radius:2px;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .tag.permanent{color:var(--brass);border-color:var(--brass-line)}
+  .tag.temporal{color:var(--ox);border-color:rgba(199,75,79,.35)}
+  .tag.sello{color:var(--ink);border-color:rgba(236,228,214,.28)}
+
+  /* HERO */
+  header.hero{
+    padding:96px 0 72px;
+    border-bottom:1px solid var(--brass-line);
+    position:relative;
+  }
+  .hero .eyebrow{display:block;margin-bottom:26px}
+  .hero h1{
+    font-family:var(--display);
+    font-optical-sizing:144;
+    font-weight:600;
+    font-size:clamp(2.6rem,7vw,5rem);
+    line-height:.98;
+    letter-spacing:-.015em;
+    max-width:14ch;
+  }
+  .hero h1 em{font-style:italic;color:var(--brass)}
+  .thesis{
+    margin-top:34px;
+    max-width:62ch;
+    font-size:clamp(1.05rem,2vw,1.3rem);
+    color:var(--ink);
+    line-height:1.5;
+  }
+  .thesis b{color:var(--ox);font-weight:700}
+  .hero .sub{
+    margin-top:22px;
+    font-family:var(--mono);
+    font-size:.78rem;
+    color:var(--faint);
+    letter-spacing:.04em;
+  }
+
+  /* SECTIONS */
+  section{padding:74px 0;border-bottom:1px solid var(--brass-faint)}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:14px;flex-wrap:wrap}
+  .sec-num{font-family:var(--mono);font-size:.8rem;color:var(--ox);letter-spacing:.1em}
+  .sec-head h2{
+    font-family:var(--display);
+    font-weight:500;
+    font-size:clamp(1.7rem,3.6vw,2.5rem);
+    letter-spacing:-.01em;
+    line-height:1.05;
+  }
+  .lead{max-width:66ch;color:var(--muted);font-size:1.05rem;margin-bottom:40px}
+  .lead strong{color:var(--ink);font-weight:600}
+
+  /* idea central cards */
+  .triad{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .acard{
+    background:var(--panel);
+    border:1px solid var(--brass-line);
+    border-radius:5px;
+    padding:26px 24px 28px;
+    position:relative;
+    overflow:hidden;
+  }
+  .acard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--brass)}
+  .acard.temporal::before{background:var(--ox)}
+  .acard.sello::before{background:var(--ink)}
+  .acard h3{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:1.22rem;
+    margin:16px 0 10px;
+    line-height:1.1;
+  }
+  .acard p{color:var(--muted);font-size:.94rem}
+  .closer{
+    margin-top:30px;
+    font-family:var(--display);
+    font-style:italic;
+    font-size:1.3rem;
+    color:var(--ink);
+    max-width:48ch;
+  }
+  .closer span{color:var(--ox);font-style:normal;font-weight:600}
+
+  /* property blocks */
+  .props{display:flex;flex-direction:column;gap:20px}
+  .prop{
+    background:var(--panel);
+    border:1px solid var(--brass-line);
+    border-radius:6px;
+    padding:30px 30px 26px;
+  }
+  .prop-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+  .prop-name{font-family:var(--display);font-weight:600;font-size:1.55rem;line-height:1.05;letter-spacing:-.01em}
+  .prop-name small{display:block;font-family:var(--mono);font-size:.7rem;color:var(--brass);letter-spacing:.14em;text-transform:uppercase;margin-top:8px;font-weight:500}
+  .grid2{display:grid;grid-template-columns:140px 1fr;gap:10px 22px;align-items:baseline}
+  .grid2 dt{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);padding-top:3px}
+  .grid2 dd{color:var(--ink);font-size:.97rem}
+  .grid2 dd .m{color:var(--muted)}
+  .pos{
+    margin-top:22px;
+    border-top:1px solid var(--brass-faint);
+    padding-top:18px;
+    background:linear-gradient(90deg, rgba(199,75,79,.07), transparent 70%);
+    margin-left:-30px;margin-right:-30px;padding-left:30px;padding-right:30px;padding-bottom:4px;
+  }
+  .pos .plabel{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ox);display:block;margin-bottom:8px}
+  .pos p{color:var(--ink);font-size:.96rem}
+  .pos b{color:var(--brass);font-weight:600}
+
+  /* DIAGRAM */
+  .diagram{
+    background:var(--panel);
+    border:1px solid var(--brass-line);
+    border-radius:8px;
+    padding:34px 30px;
+    margin-bottom:40px;
+  }
+  .layer{margin-bottom:14px}
+  .layer-label{font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
+  .node{
+    border:1px solid var(--brass-line);
+    border-radius:5px;
+    padding:14px 18px;
+    background:var(--panel2);
+    text-align:center;
+  }
+  .node .nm{font-family:var(--display);font-weight:600;font-size:1.05rem}
+  .node .ns{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+  .node.sello{border-color:rgba(236,228,214,.3)}
+  .node.casa{border-color:var(--brass-line)}
+  .node.casa .nm{color:var(--brass)}
+  .node.camp{border-color:rgba(199,75,79,.34)}
+  .node.camp .nm{color:var(--ox)}
+  .node.owned{border-color:var(--ox);background:linear-gradient(180deg,rgba(110,29,33,.35),var(--panel2))}
+  .node.owned .nm{color:var(--ink)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .conn{text-align:center;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--faint);padding:7px 0}
+  .conn .ar{color:var(--brass);font-size:.9rem}
+  .conn .ar.ox{color:var(--ox)}
+
+  /* rules */
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+  .rule{border-left:2px solid var(--brass);padding:4px 0 4px 18px}
+  .rule.ox{border-color:var(--ox)}
+  .rule h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);margin-bottom:7px;font-weight:500}
+  .rule p{color:var(--muted);font-size:.92rem}
+  .flywheel{
+    margin-top:30px;background:var(--panel2);border:1px dashed var(--brass-line);border-radius:6px;
+    padding:22px 26px;font-family:var(--display);font-style:italic;font-size:1.12rem;color:var(--ink);line-height:1.5
+  }
+  .flywheel b{color:var(--brass);font-style:normal;font-weight:600}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .step{background:var(--panel);border:1px solid var(--brass-line);border-radius:5px;padding:22px 22px 24px}
+  .step .n{font-family:var(--mono);font-size:1.5rem;color:var(--ox);font-weight:700;line-height:1}
+  .step h4{font-family:var(--display);font-weight:600;font-size:1.1rem;margin:12px 0 8px}
+  .step p{color:var(--muted);font-size:.9rem}
+
+  /* sequence */
+  .seq{display:flex;flex-direction:column;gap:0}
+  .seqrow{display:grid;grid-template-columns:64px 1fr;gap:20px;padding:20px 0;border-top:1px solid var(--brass-faint);align-items:start}
+  .seqrow:first-child{border-top:none}
+  .seqrow .sn{font-family:var(--display);font-weight:700;font-size:2.2rem;color:var(--brass);line-height:.9}
+  .seqrow .st{padding-top:4px}
+  .seqrow .st b{color:var(--ink);font-weight:600;font-size:1.05rem}
+  .seqrow .st p{color:var(--muted);font-size:.95rem;margin-top:4px}
+  .seqnote{margin-top:26px;background:var(--panel2);border-radius:6px;padding:18px 22px;color:var(--muted);font-size:.95rem;border-left:3px solid var(--ink)}
+  .seqnote b{color:var(--ink)}
+
+  /* table */
+  .tbl{width:100%;border-collapse:collapse;font-size:.92rem}
+  .tbl th{
+    font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--brass);text-align:left;padding:0 16px 14px;border-bottom:1px solid var(--brass-line);font-weight:500
+  }
+  .tbl td{padding:16px;border-bottom:1px solid var(--brass-faint);vertical-align:top;color:var(--muted)}
+  .tbl td:first-child{color:var(--ink);font-weight:600;font-family:var(--body)}
+  .tbl tr:last-child td{border-bottom:none}
+
+  /* role columns */
+  .roles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .role{background:var(--panel);border:1px solid var(--brass-line);border-radius:5px;padding:24px 22px}
+  .role .rl{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px}
+  .role.does .rl{color:var(--brass)}
+  .role.needs .rl{color:var(--ox)}
+  .role.you .rl{color:var(--ink)}
+  .role p{color:var(--muted);font-size:.93rem}
+  .role p b{color:var(--ink);font-weight:600}
+
+  /* footer */
+  footer{padding:48px 0 70px}
+  footer p{font-family:var(--mono);font-size:.72rem;color:var(--faint);letter-spacing:.04em;line-height:1.9}
+
+  /* motion */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media (max-width:860px){
+    .triad,.steps,.roles{grid-template-columns:1fr}
+    .rules{grid-template-columns:1fr}
+    .grid2{grid-template-columns:120px 1fr}
+    .pos{margin-left:-30px;margin-right:-30px}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 20px}
+    header.hero{padding:64px 0 52px}
+    section{padding:54px 0}
+    .row2{grid-template-columns:1fr}
+    .grid2{grid-template-columns:1fr;gap:4px 0}
+    .grid2 dt{padding-top:12px}
+    .prop{padding:24px 22px}
+    .pos{margin-left:-22px;margin-right:-22px;padding-left:22px;padding-right:22px}
+    .seqrow{grid-template-columns:48px 1fr;gap:14px}
+    .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+    .tbl thead{display:none}
+    .tbl td{border-bottom:none;padding:4px 0}
+    .tbl tr{border-bottom:1px solid var(--brass-line);padding:16px 0}
+    .tbl td:first-child{font-size:1.05rem;margin-bottom:6px}
+    .tbl td:not(:first-child)::before{content:attr(data-l);display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:8px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Urban Achievers · Sistema de contenido · v1</span>
+    <h1>Mapa Operativo de <em>Contenido</em> y Redes</h1>
+    <p class="thesis">Separar lo que <b>POSEE</b> audiencia de lo que la <b>GASTA</b>. Las Casas construyen público permanente. Las Campañas lo usan para estrenar. El Sello convierte todo en dinero y prestigio.</p>
+    <p class="sub">Documento de ejecución para el responsable de contenido. Los nombres provisionales van marcados.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sec-num">01</span><h2>La idea central</h2></div>
+    <p class="lead">El error común es darle a cada proyecto su propio canal. Eso produce una constelación de cuentas semi muertas, cada una arrancando de cero y en silencio entre estrenos. Todo se ordena en <strong>tres clases de activos.</strong></p>
+    <div class="triad">
+      <div class="acard permanent">
+        <span class="tag permanent">Permanentes</span>
+        <h3>Casas de Audiencia</h3>
+        <p>Construyen y retienen un público cautivo, barato y de forma continua, sin depender de ningún estreno.</p>
+      </div>
+      <div class="acard temporal">
+        <span class="tag temporal">Temporales</span>
+        <h3>Campañas de Título</h3>
+        <p>Toman prestado ese público para lanzar una película específica y luego entran en reposo.</p>
+      </div>
+      <div class="acard sello">
+        <span class="tag sello">El respaldo</span>
+        <h3>El Sello (Urban Achievers)</h3>
+        <p>Respalda todo, da la cara ante la industria y hace el trabajo de dinero y sponsors.</p>
+      </div>
+    </div>
+    <p class="closer">Las películas son <span>campañas, no casas.</span> Esa sola distinción resuelve casi todo el problema.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sec-num">02</span><h2>El mapa</h2></div>
+    <p class="lead">Cada propiedad, con su plataforma base, sus satélites, su cadencia y su objetivo.</p>
+    <div class="props">
+
+      <div class="prop">
+        <div class="prop-top">
+          <div class="prop-name">Urban Achievers<small>El Sello</small></div>
+          <span class="tag sello">Respaldo · B2B</span>
+        </div>
+        <dl class="grid2">
+          <dt>Rol</dt><dd>Prestigio y negocio, no viralidad. Tu sello de "presentado por".</dd>
+          <dt>Base</dt><dd>LinkedIn + Instagram + sitio web + <span class="m">newsletter.</span></dd>
+          <dt>Satélites</dt><dd>Re-publica lo mejor de todas las propiedades.</dd>
+          <dt>Cadencia</dt><dd>1 a 2 por semana, alta factura.</dd>
+          <dt>Objetivo</dt><dd>Sostener la lista propia (email y WhatsApp) y nutrir a INAP, sponsors, festivales, prensa y talento. Nunca persigue el algoritmo.</dd>
+        </dl>
+      </div>
+
+      <div class="prop">
+        <div class="prop-top">
+          <div class="prop-name">Dark City <small>Casa de Terror</small></div>
+          <span class="tag permanent">Casa · Permanente</span>
+        </div>
+        <dl class="grid2">
+          <dt>Rol</dt><dd>El imán principal. Testimonios reales, leyendas, mitos. No ficción.</dd>
+          <dt>Base</dt><dd>YouTube, formato largo.</dd>
+          <dt>Satélites</dt><dd>TikTok, Reels y Shorts, todos cortados del largo.</dd>
+          <dt>Cadencia</dt><dd>1 largo por semana + 4 a 6 verticales por semana.</dd>
+          <dt>Objetivo</dt><dd>Un público de terror cautivo, ya tibio cuando estrena un título. Además, laboratorio de desarrollo: las leyendas que llega la gente son IP en bruto, y algunas se vuelven películas.</dd>
+        </dl>
+        <div class="pos">
+          <span class="plabel">Posicionamiento (mi recomendación fuerte)</span>
+          <p>No "historias de miedo" genéricas, ese carril está saturado en inglés. <b>Apropiate del folklore guaraní y regional:</b> Pombero, Jasy Jateré, Luison, la Pora, los muertos de la Triple Alianza. Nadie a escala posee el terror folklórico latinoamericano con testimonios reales. Exporta bien y conecta directo con tu slate (Ali, Las Residentas, Acosta Ñu). El posicionamiento vale más que el nombre ahora mismo.</p>
+        </div>
+      </div>
+
+      <div class="prop">
+        <div class="prop-top">
+          <div class="prop-name">Short Stories <small>Casa de Series Verticales · nombre provisional</small></div>
+          <span class="tag permanent">Casa · Permanente</span>
+        </div>
+        <dl class="grid2">
+          <dt>Rol</dt><dd>Motor de ficción corta, tono distinto al terror. Apto para sponsors y vitrina de talento.</dd>
+          <dt>Base</dt><dd>Nativo vertical (TikTok, Reels, Shorts) + episodios compilados en YouTube.</dd>
+          <dt>Cadencia</dt><dd>2 a 3 episodios verticales por semana.</dd>
+          <dt>Objetivo</dt><dd>Inventario amigable para sponsors. Mapea a Influencer por Accidente y apoya estrenos en cine y dinero corporativo. Mantenelo separado del terror para que no se confundan audiencias ni marcas.</dd>
+        </dl>
+      </div>
+
+      <div class="prop">
+        <div class="prop-top">
+          <div class="prop-name">Las Películas <small>Maldecidos · Influencer por Accidente · y el resto</small></div>
+          <span class="tag temporal">Campañas · Temporales</span>
+        </div>
+        <dl class="grid2">
+          <dt>Rol</dt><dd>Marcas de campaña. Se encienden en producción, estreno y distribución, y después se archivan.</dd>
+          <dt>Base</dt><dd>Un handle por título, no siempre activo.</dd>
+          <dt>Cadencia</dt><dd>Ráfaga según la ventana, luego reposo.</dd>
+          <dt>Objetivo</dt><dd>Nunca construir de cero. Un título de terror se apoya en la Casa de Terror y el Sello. Influencer por Accidente se apoya en la Casa Vertical y el Sello.</dd>
+        </dl>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Sin callejones sin salida</h2></div>
+    <p class="lead">Cada propiedad tiene un solo trabajo: <strong>pasar la audiencia a algún lado.</strong> Convertí esto en regla literal para el responsable.</p>
+
+    <div class="diagram">
+      <div class="layer">
+        <div class="layer-label">Respaldo</div>
+        <div class="node sello"><div class="nm">Urban Achievers</div><div class="ns">El Sello · B2B · lista propia</div></div>
+      </div>
+      <div class="conn"><span class="ar">▲</span>&nbsp; cosecha logros: festivales, sponsors, taquilla</div>
+      <div class="layer">
+        <div class="layer-label">Casas de Audiencia · permanentes</div>
+        <div class="row2">
+          <div class="node casa"><div class="nm">Dark City</div><div class="ns">Terror folklórico</div></div>
+          <div class="node casa"><div class="nm">Short Stories</div><div class="ns">Series verticales</div></div>
+        </div>
+      </div>
+      <div class="conn"><span class="ar">▼</span> prestan audiencia &nbsp;·&nbsp; <span class="ar ox">▲</span> devuelven suscriptores</div>
+      <div class="layer">
+        <div class="layer-label">Campañas de Título · temporales</div>
+        <div class="node camp"><div class="nm">Maldecidos · Influencer por Accidente · La Luz · Ali</div><div class="ns">Se encienden y se archivan</div></div>
+      </div>
+      <div class="conn"><span class="ar ox">▼</span> todo desemboca en</div>
+      <div class="layer" style="margin-bottom:0">
+        <div class="node owned"><div class="nm">Audiencia propia · Email + WhatsApp</div><div class="ns">El público cautivo. Las redes son terreno alquilado.</div></div>
+      </div>
+    </div>
+
+    <div class="rules">
+      <div class="rule">
+        <h4>Las Casas alimentan a las Campañas</h4>
+        <p>Cuando Maldecidos rueda, la Casa de Terror publica "la leyenda real detrás de Maldecidos" y apunta al handle de la película.</p>
+      </div>
+      <div class="rule ox">
+        <h4>Las Campañas devuelven a las Casas</h4>
+        <p>Cada bio y pantalla final de película lleva suscripciones a su Casa madre, para que el público sobreviva al estreno.</p>
+      </div>
+      <div class="rule">
+        <h4>Todo alimenta la lista propia</h4>
+        <p>Cada corte, cada bio, un solo link para capturar email o WhatsApp. Esa lista es el activo que las plataformas no te pueden quitar.</p>
+      </div>
+      <div class="rule ox">
+        <h4>El Sello cosecha los logros</h4>
+        <p>Selecciones de festivales, logos de sponsors y taquilla, empujados al público B2B para levantar la próxima ronda.</p>
+      </div>
+    </div>
+
+    <p class="flywheel">Las Casas construyen audiencia barata y para siempre. Las Campañas la convierten en vistas, tickets y valor para sponsors. <b>El Sello</b> transforma esos logros en dinero y credibilidad, que financia las próximas películas, que alimentan a las Casas con material nuevo.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sec-num">04</span><h2>El motor: una grabación, muchos cortes</h2></div>
+    <p class="lead">El día a día del responsable es una <strong>fábrica de cortes,</strong> no "hacer contenido". Definilo como un proceso fijo y repetible.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h4>Ancla</h4><p>Graba la pieza larga en YouTube. Es el ancla de todo lo demás.</p></div>
+      <div class="step"><div class="n">2</div><h4>Corta</h4><p>De cada largo salen 5 a 10 verticales para TikTok, Reels y Shorts.</p></div>
+      <div class="step"><div class="n">3</div><h4>Programa</h4><p>Calendario semanal fijo. La consistencia importa más que el volumen.</p></div>
+      <div class="step"><div class="n">4</div><h4>Captura</h4><p>Cada pieza lleva a la lista propia. Un solo link en bio, siempre.</p></div>
+      <div class="step"><div class="n">5</div><h4>Conversa</h4><p>Responde comentarios y modera el material que envía la gente (las historias).</p></div>
+      <div class="step"><div class="n">6</div><h4>Mide</h4><p>Revisa métricas y dobla lo que funciona. Mata lo que no mueve nada.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Secuencia de lanzamiento</h2></div>
+    <p class="lead">No lances todo a la vez. Una persona no puede levantar bien cinco canales: tendrías cinco mediocres. <strong>Secuencialo.</strong></p>
+    <div class="seq">
+      <div class="seqrow"><div class="sn">1</div><div class="st"><b>Levanta primero la Casa de Terror.</b><p>La más barata, la más diferenciada y la que alimenta el slate más valioso.</p></div></div>
+      <div class="seqrow"><div class="sn">2</div><div class="st"><b>Convierte la fábrica de cortes en una máquina.</b><p>No avances hasta que el flujo grabar, cortar, programar funcione solo.</p></div></div>
+      <div class="seqrow"><div class="sn">3</div><div class="st"><b>Clona ese mismo manual a la Casa Vertical.</b><p>Mismo proceso, distinto tono. Ya no se inventa nada, se replica.</p></div></div>
+      <div class="seqrow"><div class="sn">4</div><div class="st"><b>Conecta las campañas de película a la Casa que corresponda.</b><p>A medida que se acercan los estrenos, no antes.</p></div></div>
+    </div>
+    <p class="seqnote"><b>Urban Achievers (el Sello) lo manejás vos,</b> en bajo volumen, todo el tiempo. Eso es relaciones y dinero, no fábrica de contenido.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Métricas por nivel</h2></div>
+    <p class="lead">Tres o cuatro números por propiedad. No mezcles las métricas de una Casa con las de una Campaña.</p>
+    <table class="tbl">
+      <thead><tr><th>Nivel</th><th>Qué mirar</th><th>Señal de éxito</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>El Sello</td>
+          <td data-l="Qué mirar">Tamaño y calidad de la lista propia, leads de sponsors, menciones de prensa.</td>
+          <td data-l="Señal de éxito">La lista crece con contactos útiles y entran conversaciones de sponsors.</td>
+        </tr>
+        <tr>
+          <td>Casa de Terror</td>
+          <td data-l="Qué mirar">Suscriptores en YouTube, retención y tiempo de visualización, crecimiento en verticales, historias que envía la gente.</td>
+          <td data-l="Señal de éxito">Público que vuelve solo y una cola de leyendas lista para producir.</td>
+        </tr>
+        <tr>
+          <td>Casa Vertical</td>
+          <td data-l="Qué mirar">Tasa de finalización de episodios, seguidores, alcance apto para sponsors.</td>
+          <td data-l="Señal de éxito">Episodios que se terminan de ver y marcas que se interesan.</td>
+        </tr>
+        <tr>
+          <td>Campañas (películas)</td>
+          <td data-l="Qué mirar">Conversión (clics a trailer y tickets), awareness en la ventana de estreno, suscriptores que vuelven a la Casa.</td>
+          <td data-l="Señal de éxito">El estreno mueve público real, no solo vistas sueltas.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Límites del rol</h2></div>
+    <p class="lead">Para que el responsable sepa exactamente qué es suyo y qué no.</p>
+    <div class="roles">
+      <div class="role does">
+        <div class="rl">Hace el responsable</div>
+        <p><b>Fábrica de cortes, programación, captions y comunidad.</b> Una Casa a la vez, hasta que sea una máquina.</p>
+      </div>
+      <div class="role needs">
+        <div class="rl">Necesita producción</div>
+        <p><b>Los rodajes de formato largo.</b> No es trabajo de una sola persona, requiere recursos de producción aparte.</p>
+      </div>
+      <div class="role you">
+        <div class="rl">Queda con vos · Urban Achievers</div>
+        <p><b>El Sello, las relaciones con sponsors, inversores y festivales, y las decisiones de IP.</b> Eso no se terceriza.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Urban Achievers S.A. · Documento de trabajo interno · v1<br>
+    "Short Stories" es nombre provisional. El posicionamiento (folklore regional, testimonios reales, tono por Casa) pesa más que el nombre en esta etapa.</p>
+  </div>
+</footer>
+
+<script>
+  const obs=new IntersectionObserver((es)=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}})
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+
+</body>
+</html>
